@@ -1,0 +1,5 @@
+numpy
+asyncserial
+pytest
+#sipyco-1.8-py3-none-any.whl
+sipyco @ git+https://github.com/m-labs/sipyco.git@master#egg=sipyco

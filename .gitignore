@@ -1,0 +1,10 @@
+__pycache__/
+*.swp
+*.aux
+*.log
+*.pdf
+*.out
+wlmData.ini
+doc/build
+artiq_highfinesse.egg-info/
+build/
