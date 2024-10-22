@@ -4,17 +4,17 @@ FROM python:3.10
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy application files into the container
-#COPY . .
-COPY requirements.txt .
-COPY wlmData-7.264.2-x86_64.deb .
 
-RUN dpkg -i wlmData-7.264.2-x86_64.deb
+COPY . .
+RUN apt-get update && apt-get install -y wget unzip
+RUN wget -O HighFinesseNetAccessAccessories.zip https://www.highfinesse-downloads.com/download/edcsc5ypvsua
+RUN unzip HighFinesseNetAccessAccessories.zip
+RUN dpkg -i HighFinesse\ NetAccess\ Accessories/Client_Linux/wlmData-7.264.2-x86_64.deb
+RUN cp HighFinesse\ NetAccess\ Accessories/Example\ Python/DataDemo_Basic/wlmData.py ./artiq_highfinesse/
+RUN cp HighFinesse\ NetAccess\ Accessories/Example\ Python/DataDemo_Basic/wlmConst.py ./artiq_highfinesse/
+
+
 RUN pip install -r requirements.txt
-# Install artiq_highfinesse module
-# Mount the volume when running the container
-# docker run -v $(pwd):/usr/src/app -it highfinesse
-#RUN pip install .
 
 ENV PYTHONPATH=/usr/src/app
 ENV PYTHONUNBUFFERED=1
