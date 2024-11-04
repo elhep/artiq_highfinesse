@@ -195,6 +195,9 @@ class ArtiqHighfinesseSim:
         """
         Simulate turning measurement on or off.
         """
+        if measurement_on < 0:
+            logging.warning("Simulated: Value cannot be negative")
+            return -1
         logging.warning(
             f"Simulated: Measurement set to {'on' if measurement_on else 'off'}"
         )
