@@ -199,6 +199,7 @@ class ArtiqHighfinesseSim:
             f"Simulated: Measurement set to {'on' if measurement_on else 'off'}"
         )
         self.measurement_on = measurement_on
+        return 0
 
     async def set_switch_mode_on(self, switch_mode_on):
         """
