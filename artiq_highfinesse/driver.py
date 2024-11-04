@@ -113,6 +113,8 @@ class ArtiqHighfinesse:
             logging.error(
                 f"Changing measurement state did not succeed, error code: {ret}"
             )
+            return -1
+        return 0
 
     async def set_switch_mode_on(self, switch_mode_on):
         """
