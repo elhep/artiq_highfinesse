@@ -177,16 +177,19 @@ class ArtiqHighfinesseSim:
         """
         Simulate setting autocalibration.
         """
+        if autocalibration_on < 0:
+            logging.warning("Simulated: Value cannot be negative")
+            return -1
         logging.warning(
             f"Simulated: Autocalibration set to {'on' if autocalibration_on else 'off'}"
         )
         self.autocalibration_on = autocalibration_on
+        return 0
 
     async def set_measurement_on(self, measurement_on):
         """
         Simulate turning measurement on or off.
         """
-        logging.warning(f"Measurement_on = {measurement_on}")
         if measurement_on < 0:
             logging.warning("Simulated: Value cannot be negative")
             return -1
@@ -210,10 +213,14 @@ class ArtiqHighfinesseSim:
         """
         Simulate setting switch mode.
         """
+        if switch_mode_on < 0:
+            logging.warning("Simulated: Value cannot be negative")
+            return -1
         logging.warning(
             f"Simulated: Switch mode set to {'on' if switch_mode_on else 'off'}"
         )
         self.switch_mode_on = switch_mode_on
+        return 0
 
     async def get_switch_mode_on(self):
         """
@@ -238,7 +245,11 @@ class ArtiqHighfinesseSim:
         """
         Simulate setting the exposure for a channel.
         """
+        if exposure < 0:
+            logging.warning("Simulated: Value cannot be negative")
+            return -1
         logging.warning(
             f"Simulated: Setting exposure for channel {channel} to {exposure}"
         )
         self.channel_exposure[self.convert_channel(channel)] = exposure
+        return 0
