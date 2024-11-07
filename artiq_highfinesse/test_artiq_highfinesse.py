@@ -44,6 +44,16 @@ class GenericHighfinesseTest:
         self.artiq_highfinesse.set_switch_mode_on(False)
         self.assertFalse(self.artiq_highfinesse.get_switch_mode_on())
 
+    def test_set_measurement_on(self):
+        """
+        Test enabling and disabling the measurement mode.
+        """
+        self.artiq_highfinesse.set_measurement_on(True)
+        self.assertTrue(self.artiq_highfinesse.get_measurement_on())
+
+        self.artiq_highfinesse.set_measurement_on(False)
+        self.assertFalse(self.artiq_highfinesse.get_measurement_on())
+
 
 class TestHighfinesseSim(GenericRPCCase, GenericHighfinesseTest):
     def setUp(self):
