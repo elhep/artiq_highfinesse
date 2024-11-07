@@ -4,17 +4,6 @@ from sipyco.test.generic_rpc import GenericRPCCase
 
 
 class GenericHighfinesseTest:
-    def test_set_channel_frequency(self):
-        """
-        Test setting and getting the frequency for a specific channel.
-        """
-        frequency = 5e6
-        channel = 5
-        self.artiq_highfinesse.set_channel_frequency(channel, frequency)
-        self.assertEqual(
-            frequency, self.artiq_highfinesse.get_channel_frequency(channel)
-        )
-
     def test_set_autocalibration_on(self):
         """
         Test setting and getting the autocalibration mode.

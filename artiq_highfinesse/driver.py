@@ -163,15 +163,6 @@ class ArtiqHighfinesseSim:
         )
         return self.channel_frequency[self.convert_channel(channel)]
 
-    async def set_channel_frequency(self, channel, frequency):
-        """
-        Simulate setting frequency for a channel.
-        """
-        logging.warning(
-            f"Simulated: Setting channel {channel} frequency to {frequency}"
-        )
-        self.channel_frequency[self.convert_channel(channel)] = frequency
-
     async def get_autocalibration_on(self):
         """
         Simulate getting the autocalibration state.
