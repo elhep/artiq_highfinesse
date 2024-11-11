@@ -179,12 +179,11 @@ class ArtiqHighfinesseSim:
         """
         if autocalibration_on < 0:
             logging.warning("Simulated: Value cannot be negative")
-            return -1
+            raise ValueError("Simulated: Value cannot be negative")
         logging.warning(
             f"Simulated: Autocalibration set to {'on' if autocalibration_on else 'off'}"
         )
         self.autocalibration_on = autocalibration_on
-        return 0
 
     async def set_measurement_on(self, measurement_on):
         """
@@ -192,12 +191,11 @@ class ArtiqHighfinesseSim:
         """
         if measurement_on < 0:
             logging.warning("Simulated: Value cannot be negative")
-            return -1
+            raise ValueError("Simulated: Value cannot be negative")
         logging.warning(
             f"Simulated: Measurement set to {'on' if measurement_on else 'off'}"
         )
         self.measurement_on = measurement_on
-        return 0
 
     async def get_measurement_on(self):
         """
@@ -215,12 +213,11 @@ class ArtiqHighfinesseSim:
         """
         if switch_mode_on < 0:
             logging.warning("Simulated: Value cannot be negative")
-            return -1
+            raise ValueError("Simulated: Value cannot be negative")
         logging.warning(
             f"Simulated: Switch mode set to {'on' if switch_mode_on else 'off'}"
         )
         self.switch_mode_on = switch_mode_on
-        return 0
 
     async def get_switch_mode_on(self):
         """
@@ -247,9 +244,8 @@ class ArtiqHighfinesseSim:
         """
         if exposure < 0:
             logging.warning("Simulated: Value cannot be negative")
-            return -1
+            raise ValueError("Simulated: Value cannot be negative")
         logging.warning(
             f"Simulated: Setting exposure for channel {channel} to {exposure}"
         )
         self.channel_exposure[self.convert_channel(channel)] = exposure
-        return 0
