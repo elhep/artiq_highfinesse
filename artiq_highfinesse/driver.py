@@ -139,7 +139,7 @@ class ArtiqHighfinesse:
 class ArtiqHighfinesseSim:
     def __init__(self):
         self.channel_frequency = 8 * [None]
-        self.channel_exposure = 8 * [None]
+        self.channel_exposure = 8 * [25]
         self.autocalibration_on = False
         self.measurement_on = False
         self.switch_mode_on = False
