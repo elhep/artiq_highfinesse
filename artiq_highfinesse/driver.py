@@ -28,20 +28,20 @@ class ArtiqHighfinesse:
         """
         ret = wlmData.dll.SetResultMode(wlmConst.cReturnFrequency)
         if ret:
-            logging.error(f"Setting result mode did not succeed, error code: {ret}")
+            raise RuntimeError(f"Setting result mode did not succeed, error code: {ret}")
         ret = wlmData.dll.SetAutoCalMode(1)
         if ret:
-            logging.error(f"Setting autocalibration did not succeed, error code: {ret}")
+            raise RuntimeError(f"Setting autocalibration did not succeed, error code: {ret}")
         ret = wlmData.dll.SetAutoCalSetting(wlmConst.cmiAutoCalPeriod, 2, 0, 0)
         if ret:
-            logging.error(
+            raise RuntimeError(
                 f"Setting autocalibration period did not succeed, error code:" f"{ret}"
             )
         ret = wlmData.dll.SetAutoCalSetting(
             wlmConst.cmiAutoCalUnit, wlmConst.cACMinutes, 0, 0
         )
         if ret:
-            logging.error(
+            raise RuntimeError(
                 f"Setting autocalibration units did not succeed, error code:" f"{ret}"
             )
 
@@ -57,9 +57,10 @@ class ArtiqHighfinesse:
         """
         ret = wlmData.dll.SetAutoCalMode(1 if autocalibration_on else 0)
         if ret:
-            logging.error(
+            raise ValueError(
                 f"Changing autocalibration mode did not succeed, error code: {ret}"
             )
+
 
     async def get_autocalibration_on(self):
         """
@@ -78,7 +79,7 @@ class ArtiqHighfinesse:
         """
         ret = wlmData.dll.GetFrequencyNum(channel, 0)
         if ret <= 0:
-            logging.error(f"Frequency readout did not succeed, error code: {ret}")
+            raise RuntimeError(f"Frequency readout did not succeed, error code: {ret}")
         else:
             logging.info(f"Frequency value: {ret}")
             return ret
@@ -89,7 +90,7 @@ class ArtiqHighfinesse:
         """
         ret = wlmData.dll.GetExposureNum(channel, 1, 0)
         if ret <= 0:
-            logging.error(f"Exposure readout did not succeed, error code: {ret}")
+            raise RuntimeError(f"Exposure readout did not succeed, error code: {ret}")
         else:
             logging.info(f"Exposure value: {ret}")
             return ret
@@ -100,7 +101,7 @@ class ArtiqHighfinesse:
         """
         ret = wlmData.dll.SetExposureNum(channel, 1, exposure)
         if ret < 0:
-            logging.error(f"Setting exposure did not succeed, error code: {ret}")
+            raise RuntimeError(f"Setting exposure did not succeed, error code: {ret}")
 
     async def set_measurement_on(self, measurement_on):
         """
@@ -110,10 +111,22 @@ class ArtiqHighfinesse:
             wlmConst.cCtrlStartMeasurement if measurement_on else wlmConst.cStop
         )
         if ret:
-            logging.error(
+            raise RuntimeError(
                 f"Changing measurement state did not succeed, error code: {ret}"
             )
             return -1
+        return 0
+
+    async def get_measurement_on(self):
+        """
+        Get the current autocalibration mode of the device.
+        """
+        ret = wlmData.dll.GetOperationState(0)
+        if ret == wlmConst.cCtrlStartMeasurement:
+            logging.info("Measurement on")
+            return 1
+        else:
+            logging.info("Measurement off")
         return 0
 
     async def set_switch_mode_on(self, switch_mode_on):
@@ -122,7 +135,7 @@ class ArtiqHighfinesse:
         """
         ret = wlmData.dll.SetSwitcherMode(1 if switch_mode_on else 0)
         if ret:
-            logging.error(f"Changing switch mode did not succeed, error code: {ret}")
+            raise RuntimeError(f"Changing switch mode did not succeed, error code: {ret}")
 
     async def get_switch_mode_on(self):
         """
