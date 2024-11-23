@@ -312,7 +312,7 @@ class ArtiqHighfinesseSim:
         )
         self.channel_on[self.convert_channel(channel)] = channel_on
 
-    async def get_channel_on(self, channel, channel_on):
+    async def get_channel_on(self, channel):
         """
         Simulate getting the current state of the channel.
         """
