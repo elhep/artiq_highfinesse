@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import asyncio
+import ctypes
 import logging
 import sys
 
@@ -60,7 +61,6 @@ class ArtiqHighfinesse:
             raise ValueError(
                 f"Changing autocalibration mode did not succeed, error code: {ret}"
             )
-
 
     async def get_autocalibration_on(self):
         """
@@ -135,7 +135,9 @@ class ArtiqHighfinesse:
         """
         ret = wlmData.dll.SetSwitcherMode(1 if switch_mode_on else 0)
         if ret:
-            raise RuntimeError(f"Changing switch mode did not succeed, error code: {ret}")
+            raise RuntimeError(
+                f"Changing switch mode did not succeed, error code: {ret}"
+            )
 
     async def get_switch_mode_on(self):
         """
@@ -148,9 +150,47 @@ class ArtiqHighfinesse:
             logging.info("Switch mode off")
         return ret
 
+    async def set_channel_on(self, channel, channel_on):
+        """
+        Set the current state of the channel.
+        """
+        # Normally the errors are handled by the return codes. However, trying to change
+        # the state of the calibration signal is UB and causes issues with the device.
+        # Hence, handled separately.
+        if channel == 8:
+            raise RuntimeError("Cannot change the state of the calibration signal")
+        # Even though there are 8 available signals, the driver accepts up to 18
+        if channel < 1 or channel > 8:
+            raise RuntimeError(f"Channel {channel} out of range")
+        show = 0  # We do not support show option, setting to 0
+        ret = wlmData.dll.SetSwitcherSignalStates(channel, channel_on, show)
+        if ret:
+            raise RuntimeError(
+                f"Changing channel state did not succeed, error code: {ret}"
+            )
+
+    async def get_channel_on(self, channel):
+        """
+        Get the current state of the channel.
+        """
+        # Even though there are 8 available signals, the driver accepts up to 18
+        if channel < 1 or channel > 8:
+            raise RuntimeError(f"Channel {channel} out of range")
+        Use = ctypes.c_int(0)
+        Show = ctypes.c_int(0)
+        ret = wlmData.dll.GetSwitcherSignalStates(
+            channel, ctypes.byref(Use), ctypes.byref(Show)
+        )
+        if ret < 0:
+            raise RuntimeError(
+                f"Getting channel state did not succeed, error code: {ret}"
+            )
+        return Use.value
+
 
 class ArtiqHighfinesseSim:
     def __init__(self):
+        self.channel_on = 8 * [0]
         self.channel_frequency = 8 * [None]
         self.channel_exposure = 8 * [25]
         self.autocalibration_on = False
@@ -262,3 +302,22 @@ class ArtiqHighfinesseSim:
             f"Simulated: Setting exposure for channel {channel} to {exposure}"
         )
         self.channel_exposure[self.convert_channel(channel)] = exposure
+
+    async def set_channel_on(self, channel, channel_on):
+        """
+        Simulate setting the current state of the channel.
+        """
+        logging.warning(
+            f"Simulated: Setting state of the channel {channel} to {channel_on}"
+        )
+        self.channel_on[self.convert_channel(channel)] = channel_on
+
+    async def get_channel_on(self, channel, channel_on):
+        """
+        Simulate getting the current state of the channel.
+        """
+        logging.warning(
+            f"Simulated: State of the channel {channel} is "
+            f"{self.channel_on[self.convert_channel(channel)]}"
+        )
+        return self.channel_on[self.convert_channel(channel)]
