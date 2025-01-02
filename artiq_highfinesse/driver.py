@@ -46,7 +46,10 @@ class ArtiqHighfinesse:
             )
 
     async def ping(self):
-        return True
+        if wlmData.dll.GetWLMCount(0) == 0:
+            return False
+        else:
+            return True
 
     async def set_autocalibration_on(self, autocalibration_on):
         """
